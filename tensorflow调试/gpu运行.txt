@@ -2,6 +2,16 @@
 
 方法一：
 在main()函数下加：
+import os
 os.environ["CUDA_VISIBLE_DEVICES"]='0'#
 
 方法二:
+CUDA_VISIBLE_DEVICES=1 python my_script.py
+
+CUDA_VISIBLE_DEVICES=0,1         Devices 0 and 1 will be visible
+CUDA_VISIBLE_DEVICES="0,1"       Same as above, quotation marks are optional
+
+
+#设置使用显存大小
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)#gpu显存*0.7
+sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) 
