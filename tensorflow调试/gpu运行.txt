@@ -1,0 +1,7 @@
+#tensorflow 运行在gpu上
+
+方法一：
+在main()函数下加：
+os.environ["CUDA_VISIBLE_DEVICES"]='0'#
+
+方法二:
