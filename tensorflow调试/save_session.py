@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 train=False
 
+
 if train:
 	W = tf.Variable([[1,2,3],
 					[3,2,5]],dtype=tf.float32,name='weights')
