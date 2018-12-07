@@ -12,9 +12,11 @@ if train:
 	print('bias:',b)
 	
 	init=tf.initialize_all_variables()
+	global_init=tf.global_variables_initializer()
 	saver=tf.train.Saver()#会话之前定义
 	with tf.Session() as sess:
-		sess.run(init)#这一步之后，W,B都初始化了
+		sess.run(global_init)#全局初始化
+		sess.run(init)#局部初始化，这一步之后，W,B都初始化了
 		print(sess.run(W))#建立W bariable的时候还没有值，run之后才初始化
 		print(sess.run(b))
 		save_path=saver.save(sess,r"C:\Users\mrliangcb\Desktop\note\module\tf\mnist\checkpoint\save.ckpt")
