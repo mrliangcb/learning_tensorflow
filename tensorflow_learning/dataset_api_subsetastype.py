@@ -96,7 +96,8 @@ def read_images(dataset_path, mode, batch_size):
 	# Read images from disk
 	image = tf.read_file(image)
 	image = tf.image.decode_jpeg(image, channels=CHANNELS)#image还是tensor类型
-
+	#tf.decode_csv
+	
 	# Resize images to a common size
 	image = tf.image.resize_images(image, [IMG_HEIGHT, IMG_WIDTH])
 	
