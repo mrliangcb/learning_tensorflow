@@ -35,7 +35,7 @@ b = tf.Variable(rng.randn(), name="bias")
 
 #定义图形
 #模型op
-pred = tf.add(tf.multiply(X, W), b)
+pred = tf.add(tf.multiply(X, W), b)#x1*W1+b
 
 # 代价函数op
 cost = tf.reduce_sum(tf.pow(pred-Y, 2))/(2*n_samples)
