@@ -102,8 +102,10 @@ def read_images(dataset_path, mode, batch_size):
 	# Resize images to a common size
 	image = tf.image.resize_images(image, [IMG_HEIGHT, IMG_WIDTH])
 	
+	
 	# Normalize
 	image = image * 1.0/127.5 - 1.0
+	
 	
 	# Create batches
 	X, Y = tf.train.batch([image, label], batch_size=batch_size,
@@ -115,7 +117,7 @@ def read_images(dataset_path, mode, batch_size):
 # Parameters
 learning_rate = 0.001
 num_steps = 10000
-batch_size = 128
+batch_size = 2
 display_step = 100
 dropout = 0.75
 
@@ -196,7 +198,8 @@ with tf.Session() as sess:
 	# Training cycle
 	for step in range(1, num_steps+1):
 		if step % display_step == 0: 
-			print('看一下类型',sess.run(Y))
+			a,b=sess.run([X,Y])#同时run不要忘记[]
+			print('X是：',type(a),'  |  ','Y是:',type(b))#图片/label数据在运算中是numpy类型
 			# Run optimization and calculate batch loss and accuracy
 			_, loss, acc = sess.run([train_op, loss_op, accuracy])
 			print("Step " + str(step) + ", Minibatch Loss= " + \

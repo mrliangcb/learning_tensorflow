@@ -44,12 +44,13 @@ example_batch, label_batch=get_data()
 
 
 with tf.Session() as sess:  
-	#coord = tf.train.Coordinator()  
-	#threads = tf.train.start_queue_runners(coord=coord) 
-	tf.train.start_queue_runners()
+	coord = tf.train.Coordinator()  
+	threads = tf.train.start_queue_runners(coord=coord) 
+	#coord = tf.train.Coordinator()
+	#tf.train.start_queue_runners(coord=coord)
 	for i in range(10):  
 		a,b=sess.run([example_batch,label_batch])#a取得第一行batch个，
-		print(a,' |  ',b)
+		print(type(a),' |  ',b)
 		#print(a | b)
-	#coord.request_stop()  
-	#coord.join(threads)
+	coord.request_stop()  
+	coord.join(threads)
