@@ -1,4 +1,4 @@
-#dangereader，多个样本
+#一个csv文件，多个样本
 #https://blog.csdn.net/m0_37407756/article/details/80671961
 import tensorflow as tf  
 filenames = [r'C:\lcb\learning_python_git\learning_tensorflow\tensorflow_learning\test.csv'] 
@@ -46,9 +46,10 @@ example_batch, label_batch=get_data()
 with tf.Session() as sess:  
 	#coord = tf.train.Coordinator()  
 	#threads = tf.train.start_queue_runners(coord=coord) 
-	tf.train.start_queue_runners()	
+	tf.train.start_queue_runners()
 	for i in range(10):  
-		a,b=sess.run([example_batch,label_batch])
+		a,b=sess.run([example_batch,label_batch])#a取得第一行batch个，
+		print(a,' |  ',b)
 		#print(a | b)
 	#coord.request_stop()  
 	#coord.join(threads)
