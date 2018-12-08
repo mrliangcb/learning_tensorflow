@@ -9,7 +9,7 @@ mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 # Parameters
 learning_rate = 0.01
 training_epochs = 25
-batch_size = 100
+batch_size = 10
 display_step = 1
 
 # tf Graph Input
@@ -24,8 +24,9 @@ batch_xs, batch_ys = mnist.train.next_batch(batch_size)#数据loader
 
 #模型结构
 pred = tf.nn.softmax(tf.matmul(batch_xs, W) + b) # Softmax  x1*w1+x2*w2+……+b
+pred_test = tf.nn.softmax(tf.matmul(batch_xs, W) + b)
 
-# Minimize error using cross entropy
+# Minimize error using cross entropy代价函数
 cost = tf.reduce_mean(-tf.reduce_sum(batch_ys*tf.log(pred), reduction_indices=1))
 #
 
@@ -51,6 +52,9 @@ with tf.Session() as sess:
             # Fit training using batch data
             _, c = sess.run([optimizer, cost])#, feed_dict={x: batch_xs,
                                               #            y: batch_ys})
+            p=sess.run(pred_test)
+            print('输出:',p.shape)#输出是np
+
             # Compute average loss
             avg_cost += c / total_batch
         # Display logs per epoch step
