@@ -1,5 +1,10 @@
 #关于数据集
 #子文件夹作为类
+#参考https://blog.csdn.net/m0_37407756/article/details/80671961
+#tf分为前端系统（负责构造计算图，就是op）还有后端系统（会话，负责计算图）
+#数据读图分三种：预加载，placeholder&feed_dict(会有开销，只适合小型数据)，直接从文件读取(这种主要应对大型数据，前两种不适合大型数据)
+
+
  # ROOT_FOLDER
        # |-------- SUBFOLDER (CLASS 0)
        # |             |
@@ -34,6 +39,7 @@ CHANNELS = 3 # The 3 color channels, change to 1 if grayscale
 # 2 modes: 'file' or 'folder'
 def read_images(dataset_path, mode, batch_size):
 	imagepaths, labels = list(), list()
+	dict={}
 	if mode == 'file':
 		# Read dataset file
 		data = open(dataset_path, 'r').read().splitlines()
@@ -50,36 +56,50 @@ def read_images(dataset_path, mode, batch_size):
 			
 		except Exception:  # Python 3
 			classes = sorted(os.walk(dataset_path).__next__()[1])
+		
+		#得到类别，文件夹名字
 		# List each sub-directory (the classes)
 		for c in classes:
-			c_dir = os.path.join(dataset_path, c)
+			c_dir = os.path.join(dataset_path, c)#拼成子文件夹全名
 			try:  # Python 2
 				walk = os.walk(c_dir).next()
 			except Exception:  # Python 3
 				walk = os.walk(c_dir).__next__()
 			# Add each image to the training set
-			for sample in walk[2]:
+			for sample in walk[2]:#遍历这个子文件夹里面的图片
 				# Only keeps jpeg images
 				if sample.endswith('.png') or sample.endswith('.png'):
-					imagepaths.append(os.path.join(c_dir, sample))
-					labels.append(label)
+					imagepaths.append(os.path.join(c_dir, sample))#增加一个图的地址到list1
+					labels.append(label)#把对应的label加入到第二个list2(这里可以自己拼路径和label)
+			#拼完一个类到list之后
+			dict.update({c:label})
+			#print('拼出来的字典',dict)#{'trainingJunk_png': 0, 'trainingSymbols_png': 1}
 			label += 1
 	else:
 		raise Exception("Unknown mode.")
+	#前面是可以自己修改的部分，拼路径和拼label两个list
+	#前面选取file指的是文件里找到地址列表
+	
 	# Convert to Tensor
+	#将图片地址转为tensor型
 	imagepaths = tf.convert_to_tensor(imagepaths, dtype=tf.string)
+	#label也转成tensor
 	labels = tf.convert_to_tensor(labels, dtype=tf.int32)
+	
 	# Build a TF Queue, shuffle data
-	image, label = tf.train.slice_input_producer([imagepaths, labels],
+	
+	#放入图地址和label到队列，每次取其实是得到地址和label真值
+	image, label = tf.train.slice_input_producer([imagepaths, labels],#地址和label各自是listh,每次都从两条list里面取出前128个数据
 												shuffle=True)
-
+	
+	#解码图地址
 	# Read images from disk
 	image = tf.read_file(image)
-	image = tf.image.decode_jpeg(image, channels=CHANNELS)
+	image = tf.image.decode_jpeg(image, channels=CHANNELS)#image还是tensor类型
 
 	# Resize images to a common size
 	image = tf.image.resize_images(image, [IMG_HEIGHT, IMG_WIDTH])
-
+	
 	# Normalize
 	image = image * 1.0/127.5 - 1.0
 	
@@ -88,7 +108,7 @@ def read_images(dataset_path, mode, batch_size):
 						  capacity=batch_size * 8,
 						  num_threads=4)
 
-	return X, Y#建立好了数据框架X,Y，run它会得到numpy型
+	return X, Y#建立好了X,Y的dataloader，run它会得到numpy型,run的时候不会再重新跑一边def函数
 
 # Parameters
 learning_rate = 0.001
@@ -161,7 +181,7 @@ with tf.Session() as sess:
 	sess.run(init)
 	# Start the data queue
 	tf.train.start_queue_runners()#充值队列,此时runX，Y就会得到numpy型，
-	# a=sess.run(X)
+	#a=sess.run(Y)
 	# b=sess.run(X)#两次取到的图片，a，b不同，如果run了X之后，会得到前128个X和Y，如果再单独runY，是下一个batch的Y，
 	#对于X,Y 可以取无限次，取完一个epoch之后，自动制作第二个epoch
 	# plt.figure(1)
@@ -169,11 +189,12 @@ with tf.Session() as sess:
 	# plt.figure(2)
 	# plt.imshow(b[0])
 	# plt.show()把取到的numpy图片显示出来
-	print('获得图片:',a)#128,64,64,3 ，里外都是numpy型
+	#print('获得图片:',a)#128,64,64,3 ，里外都是numpy型
 	
 	# Training cycle
 	for step in range(1, num_steps+1):
 		if step % display_step == 0: 
+			print('看一下类型',sess.run(Y))
 			# Run optimization and calculate batch loss and accuracy
 			_, loss, acc = sess.run([train_op, loss_op, accuracy])
 			print("Step " + str(step) + ", Minibatch Loss= " + \
