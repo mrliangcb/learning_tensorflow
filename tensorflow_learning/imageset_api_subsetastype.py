@@ -3,7 +3,7 @@
 #参考https://blog.csdn.net/m0_37407756/article/details/80671961
 #tf分为前端系统（负责构造计算图，就是op）还有后端系统（会话，负责计算图）
 #数据读图分三种：预加载，placeholder&feed_dict(会有开销，只适合小型数据)，直接从文件读取(这种主要应对大型数据，前两种不适合大型数据)
-
+#先建立名字队列，一次取出batch样本，然后再读样本
 
  # ROOT_FOLDER
        # |-------- SUBFOLDER (CLASS 0)
@@ -82,13 +82,14 @@ def read_images(dataset_path, mode, batch_size):
 	
 	# Convert to Tensor
 	#将图片地址转为tensor型
-	imagepaths = tf.convert_to_tensor(imagepaths, dtype=tf.string)
+	#imagepaths = tf.convert_to_tensor(imagepaths, dtype=tf.string)
 	#label也转成tensor
-	labels = tf.convert_to_tensor(labels, dtype=tf.int32)
+	#labels = tf.convert_to_tensor(labels, dtype=tf.int32)
 	
 	# Build a TF Queue, shuffle data
 	
-	#放入图地址和label到队列，每次取其实是得到地址和label真值
+	#放入图地址（而不是整张图片，如果放入整张的话，就没有队列的意义了）
+	#和label到队列，每次取其实是得到地址和label真值
 	image, label = tf.train.slice_input_producer([imagepaths, labels],#地址和label各自是listh,每次都从两条list里面取出前128个数据
 												shuffle=True)
 	
