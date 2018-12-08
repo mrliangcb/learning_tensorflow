@@ -35,6 +35,10 @@ IMG_HEIGHT = 64 # CHANGE HERE, the image height to be resized to
 IMG_WIDTH = 64 # CHANGE HERE, the image width to be resized to
 CHANNELS = 3 # The 3 color channels, change to 1 if grayscale
 
+# def reformat(samples,labels):
+	# [图片数,高，宽，通道]
+
+
 # Reading the dataset
 # 2 modes: 'file' or 'folder'
 def read_images(dataset_path, mode, batch_size):
@@ -101,6 +105,7 @@ def read_images(dataset_path, mode, batch_size):
 	
 	# Resize images to a common size
 	image = tf.image.resize_images(image, [IMG_HEIGHT, IMG_WIDTH])
+	image=tf.image.rgb_to_grayscale(image)   #(rgb转单通道的灰度)
 	
 	
 	# Normalize
@@ -185,7 +190,7 @@ with tf.Session() as sess:
 	sess.run(init)
 	# Start the data queue
 	tf.train.start_queue_runners()#充值队列,此时runX，Y就会得到numpy型，
-	#a=sess.run(Y)
+	a=sess.run(X)
 	# b=sess.run(X)#两次取到的图片，a，b不同，如果run了X之后，会得到前128个X和Y，如果再单独runY，是下一个batch的Y，
 	#对于X,Y 可以取无限次，取完一个epoch之后，自动制作第二个epoch
 	# plt.figure(1)
@@ -193,7 +198,7 @@ with tf.Session() as sess:
 	# plt.figure(2)
 	# plt.imshow(b[0])
 	# plt.show()把取到的numpy图片显示出来
-	#print('获得图片:',a)#128,64,64,3 ，里外都是numpy型
+	print('获得图片:',a.shape)#128,64,64,3 ，里外都是numpy型
 	
 	# Training cycle
 	for step in range(1, num_steps+1):

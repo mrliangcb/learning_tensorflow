@@ -48,9 +48,11 @@ with tf.Session() as sess:
 	threads = tf.train.start_queue_runners(coord=coord) 
 	#coord = tf.train.Coordinator()
 	#tf.train.start_queue_runners(coord=coord)
-	for i in range(10):  
+	a,b=sess.run([example_batch,label_batch])
+	print('循环前:',a,' |  ',b)
+	for i in range(10):  #前面已经取了一次，后面就从第二个batch开始取
 		a,b=sess.run([example_batch,label_batch])#a取得第一行batch个，
-		print(type(a),' |  ',b)
+		print(a,' |  ',b)
 		#print(a | b)
 	coord.request_stop()  
 	coord.join(threads)
