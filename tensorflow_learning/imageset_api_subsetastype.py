@@ -27,7 +27,7 @@ import os
 
 # Dataset Parameters - CHANGE HERE
 MODE = 'folder' # or 'file', if you choose a plain text file (see above).
-DATASET_PATH = r'C:\Users\mrliangcb\Desktop\note\module\tf\mnist\testdata' # the dataset file or root folder path.
+DATASET_PATH = r'./testdata' # the dataset file or root folder path.
 
 # Image Parameters
 N_CLASSES = 2 # CHANGE HERE, total number of classes
