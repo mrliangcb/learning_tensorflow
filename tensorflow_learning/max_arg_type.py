@@ -1,14 +1,13 @@
 #求最大概率的类
 import numpy as np
 
+#法一直接用python numpy做
 #模型结构
 #定义模型的时候多写一个模型，输入测试数据loader
 # pred = tf.nn.softmax(tf.matmul(batch_xs, W) + b) # Softmax  x1*w1+x2*w2+……+b
 # pred_test = tf.nn.softmax(tf.matmul(测试数据, W) + b)
 
 # p=sess.run(pred_test)#输出np型，行为batch个数据，列为输出向量
-
-
 
 # pred_y = np.append(pred_y, np.argmax(logits_value_test, axis=1))
 					# real_y = np.append(real_y, _test_label)
@@ -23,3 +22,13 @@ print(e)
 e=np.append(a,b)
 
 print(e)
+
+
+
+#法二：tensorflow模型
+# with tf.name_scope('Accuracy'):
+	# acc = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+	# acc = tf.reduce_mean(tf.cast(acc, tf.float32))
+
+
+
