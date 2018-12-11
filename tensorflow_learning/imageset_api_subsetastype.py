@@ -112,7 +112,7 @@ def read_images(dataset_path, mode, batch_size):
 	image = image * 1.0/127.5 - 1.0
 	
 	
-	# Create batches
+	# Create batches#batch产生器：data_loader
 	X, Y = tf.train.batch([image, label], batch_size=batch_size,
 						  capacity=batch_size * 8,
 						  num_threads=4)
@@ -133,6 +133,7 @@ dropout = 0.75
 def conv_net(x, n_classes, dropout, reuse, is_training):
     # Define a scope for reusing the variables
     with tf.variable_scope('ConvNet', reuse=reuse):
+		#reuse设置用于方便共享模型，训练的时候创建模型，测试的时候共享
 
         # Convolution Layer with 32 filters and a kernel size of 5
         conv1 = tf.layers.conv2d(x, 32, 5, activation=tf.nn.relu)
@@ -172,7 +173,7 @@ labels = tf.placeholder(tf.float32, shape=[None, 10])
 logits_train = conv_net(X, N_CLASSES, dropout, reuse=False, is_training=True)
 # Create another graph for testing that reuse the same weights
 logits_test = conv_net(X, N_CLASSES, dropout, reuse=True, is_training=False)
-
+#换一个输入,reuse的话，就不是创建一个新的模型，是共享模型
 # Define loss and optimizer (with train logits, for dropout to take effect)
 loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
 	logits=logits_train, labels=Y))

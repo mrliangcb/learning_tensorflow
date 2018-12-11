@@ -191,8 +191,9 @@ sess = tf.Session()
 # important step
 sess.run(tf.initialize_all_variables())
 for i in range(1000):
-	batch_xs, batch_ys = mnist.train.next_batch(100)
+	batch_xs, batch_ys = mnist.train.next_batch(100)#定义一个op，
 	sess.run(train_step, feed_dict={xs: batch_xs,ys: batch_ys, keep_prob: 0.5})
+	#run一下数据的时候，相当于run了batch_xs和y，本质是输入numpy,
 	if i % 50 == 0:
 		line_acc=compute_accuracy(mnist.test.images, mnist.test.labels)
 		print(line_acc)
