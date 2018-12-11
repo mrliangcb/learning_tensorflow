@@ -1,7 +1,7 @@
 #一个csv文件，多个样本
 #https://blog.csdn.net/m0_37407756/article/details/80671961
 import tensorflow as tf  
-filenames = [r'C:\lcb\learning_python_git\learning_tensorflow\tensorflow_learning\test.csv'] 
+filenames = [r'C:\lcb\learning_python_git\learning_tensorflow\tensorflow_learning\test.csv',r'./test2.csv'] 
 
 def get_data():
 	## filenames = tf.train.match_filenames_once('.\data\*.csv') 
@@ -12,7 +12,7 @@ def get_data():
 	# [C]
 	#[结束]
 	#定义一个reader，还没开始读
-	reader = tf.TextLineReader()
+	reader = tf.TextLineReader()#一次读一行
 	key, value = reader.read(filename_queue)
 	example, label = tf.decode_csv(value, record_defaults=[['null'], ['null']])#分别读两列，有多少列就要读多少，等号前有多少变量
 	#拿到的是tensor类型，可以串起来

@@ -113,6 +113,7 @@ def read_images(dataset_path, mode, batch_size):
 	
 	
 	# Create batches#batch产生器：data_loader
+	#train.batch必须和producer配合使用
 	X, Y = tf.train.batch([image, label], batch_size=batch_size,
 						  capacity=batch_size * 8,
 						  num_threads=4)
