@@ -7,6 +7,7 @@ def get_data():
 	## filenames = tf.train.match_filenames_once('.\data\*.csv') 
 	filename_queue = tf.train.string_input_producer(filenames, shuffle=False)  #名字放入文件名队列，一个epoch，打乱，
 																	#如果名字队列要绑定多几个值就[image_name,value]
+	
 	# [B]
 	# [A]
 	# [C]
@@ -15,6 +16,7 @@ def get_data():
 	reader = tf.TextLineReader()#一次读一行
 	key, value = reader.read(filename_queue)
 	example, label = tf.decode_csv(value, record_defaults=[['null'], ['null']])#分别读两列，有多少列就要读多少，等号前有多少变量
+	
 	#拿到的是tensor类型，可以串起来
 	#features = tf.pack([example,label])
 
