@@ -42,12 +42,29 @@ def conv(x, filter_height, filter_width, num_filters, stride_y, stride_x, name,
 		#(3)name_scope不允许共享变量，即一个域之内不能重'name
 		#(如果姓重名了，则姓加上_1 _2后缀)
 		#二、vari_scope
-		#(4)varialbe_scope允许共享变量scope.reuse_variables()  # 设置共享变量，然后再创建重名的
-		# 即	variable_scope/var1:0
-			# variable_scope/var1:0
-		#如果不设置reuse（只能对之后的一次创建有效），又重名的话，则在名加_1_2后缀
+		#(4)varialbe_scope允许共享变量scope.reuse_variables()  
+		# 设置共享变量reuse=true，然后再创建重名的
+		# var1 = tf.get_variable(name='var1')#重用的只需要写名就好，不用创建shape
+		# print(var1.name)
+
+		# with tf.variable_scope('a') as foo_scope:#第一次是创建，不用写reuse
+			# v = tf.get_variable('a1', [1])
+		# with tf.variable_scope('a', reuse=True):  #这次不是创建，只是用之前的域下的变量，所以reuse
+			# v1 = tf.get_variable('a1')
+
+		# 即	variable_scope/var1:0#原来的变量.name
+			# variable_scope/var1:0#后来reuse=true创建的
+			
+			
+			
+		#如果不设置reuse，又重名的话，则在名加_1_2后缀
 		#重姓：with tf.variable_scope(foo_scope, reuse=True):  #直接指定前面的那个variable_scope
 		
+		#with scope()里面有个reuse，可以选择None,tf.AUTO_REUSE与True，false四个
+		#none则继承父类的scope
+		#tf.AUTO_REUSE选择存在则复用，不存在则创建
+		#true就是直接是复用，不创建，找不到的话估计会报错
+		#false，只创建，如果有重名的会加后缀
 													
 		biases = tf.get_variable('biases', shape=[num_filters])
 		#biases.name=name.biases

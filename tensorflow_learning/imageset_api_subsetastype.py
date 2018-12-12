@@ -175,6 +175,7 @@ logits_train = conv_net(X, N_CLASSES, dropout, reuse=False, is_training=True)
 # Create another graph for testing that reuse the same weights
 logits_test = conv_net(X, N_CLASSES, dropout, reuse=True, is_training=False)
 #换一个输入,reuse的话，就不是创建一个新的模型，是共享模型
+
 # Define loss and optimizer (with train logits, for dropout to take effect)
 loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
 	logits=logits_train, labels=Y))
