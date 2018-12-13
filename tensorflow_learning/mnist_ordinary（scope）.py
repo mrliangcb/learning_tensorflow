@@ -9,6 +9,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 # number 1 to 10 data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
+
+
 def compute_accuracy(v_xs, v_ys):
     global prediction
     y_pre = sess.run(prediction, feed_dict={xs: v_xs, keep_prob: 1})
@@ -195,6 +197,11 @@ b_fc2 = bias_variable([10])
 prediction = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 
+correct_prediction = tf.equal(tf.argmax(prediction,1), tf.argmax(ys,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+
+
 # the error between prediction and real data
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(prediction),reduction_indices=[1]))       # loss
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
@@ -207,8 +214,12 @@ step_line=[]
 sess = tf.Session()
 # important step
 sess.run(tf.initialize_all_variables())
+
+print('数据长度:',mnist.train.images.shape)#就是一个np型，55000,784  #属于预加载类型
+print('数据长度:',mnist.test.images.shape)
+
 for i in range(1000):
-	batch_xs, batch_ys = mnist.train.next_batch(100)#定义一个op，
+	batch_xs, batch_ys = mnist.train.next_batch(32)#定义一个op，
 	sess.run(train_step, feed_dict={xs: batch_xs,ys: batch_ys, keep_prob: 0.5})
 	
 	#可以把array放入placeholder
@@ -217,6 +228,7 @@ for i in range(1000):
 	
 	#run一下数据的时候，相当于run了batch_xs和y，本质是输入numpy,
 	if i % 50 == 0:
+		print('显示训练集准确率:',sess.run(accuracy,feed_dict={xs: batch_xs,ys: batch_ys, keep_prob: 0.5}))
 		line_acc=compute_accuracy(mnist.test.images, mnist.test.labels)
 		print(line_acc)
 		
