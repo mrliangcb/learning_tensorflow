@@ -94,7 +94,10 @@ def read_images(dataset_path, mode, batch_size):
 	
 	#放入图地址（而不是整张图片，如果放入整张的话，就没有队列的意义了）
 	#和label到队列，每次取其实是得到地址和label真值
-	image, label = tf.train.slice_input_producer([imagepaths, labels],#地址和label各自是listh,每次都从两条list里面取出前128个数据
+	imagepaths2=imagepaths[:10]#给定部分下标，然后赋值给新的list变量
+	labels2=labels[:10]
+	print('在这里在这里:',len(labels2))
+	image, label = tf.train.slice_input_producer([imagepaths2, labels2],#地址和label各自是listh,每次都从两条list里面取出前128个数据
 												shuffle=True)
 	
 	#解码图地址
